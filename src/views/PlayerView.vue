@@ -85,7 +85,7 @@ import { usePlayerStore } from "@/store/playerStore";
 import { Player } from "@/model/player";
 import { storeToRefs } from "pinia";
 import { useVuelidate } from "@vuelidate/core";
-import { required, helpers, numeric, alpha } from "@vuelidate/validators";
+import { required, helpers, maxLength } from "@vuelidate/validators";
 
 const store = usePlayerStore();
 const { players } = storeToRefs(store);
@@ -103,8 +103,16 @@ const numericLimit = (value: any) => {
   return numericValue >= 1 && numericValue <= 99;
 };
 
+const customAlpha = (value: any) => {
+  if (!value) {
+    return true;
+  }
+ 
+  return /^[a-zA-Z\s]+$/.test(value);
+};
+
 const rules = {
-  name: { required, alpha },
+  name: { required, customAlpha, maxLength: maxLength(50) },
   number: {
     required,
     numeric: helpers.withMessage(
